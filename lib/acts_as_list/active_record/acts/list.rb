@@ -402,10 +402,12 @@ module ActiveRecord
           shuffle_positions_on_intermediate_items old_position, new_position, id
         end
 
-        def position_before_save
-          if ActiveRecord::VERSION::MAJOR >= 5 && ActiveRecord::VERSION::MINOR >= 1
+        if Gem::Version.new(ActiveRecord::VERSION::STRING) >= Gem::Version.new("5.1.0.beta1")
+          def position_before_save
             send("#{position_column}_before_last_save")
-          else
+          end
+        else
+          def position_before_save
             send("#{position_column}_was")
           end
         end
